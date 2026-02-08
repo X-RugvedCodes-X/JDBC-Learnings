@@ -257,10 +257,6 @@ Batch = **stack many filled templates → send together**
 
 # Most Common Asked Questions
 
-Perfect. These are exactly the questions that turn a “knows JDBC” candidate into an **engineer**.
-
-I’ll answer them the way strong interview answers usually sound: practical, trade-off aware, and production minded.
-
 ---
 
 # 1) What if a batch partially fails?
@@ -286,8 +282,8 @@ If auto-commit is **false** (like in your code), I have two options:
 Rollback everything → keep data consistent.
 
 Used when:
-✔ atomicity is important
-✔ partial data is dangerous
+- atomicity is important
+- partial data is dangerous
 
 ```
 if any failed → rollback()
@@ -300,9 +296,9 @@ if any failed → rollback()
 Commit successful ones, track failures.
 
 Used in:
-✔ bulk ingestion
-✔ logs
-✔ analytics
+- bulk ingestion
+- logs
+- analytics
 
 ---
 
@@ -313,7 +309,6 @@ So you might not even know later results.
 
 ---
 
----
 
 # 2) How would you retry only failed rows?
 
@@ -350,7 +345,6 @@ Still fail → log + skip
 
 ---
 
----
 
 # 3) What if 10 million records?
 
@@ -391,7 +385,6 @@ You may also:
 
 ---
 
----
 
 # 4) Memory considerations?
 
@@ -452,7 +445,6 @@ driver, DB, network.
 
 ---
 
----
 
 # 6) How would you design this in layers?
 
@@ -489,7 +481,6 @@ Database
 
 ---
 
----
 
 # 7) How would this run in production?
 
