@@ -13,7 +13,7 @@
 
   ### 2. Navigate to Any of the Java Project's Root Directory:
   ```bash
-  cd JDBC Learnings/jdbc-intro
+  cd JDBC-Learnings/jdbc-intro
   ```
   ### 3. Configure Your Environment Variables for Database Connection - Add Your url, username and password for Database Connection
   ```bash
