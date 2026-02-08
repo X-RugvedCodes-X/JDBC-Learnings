@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -49,7 +50,7 @@ public class Main {
           }
           System.out.print("Enter Student's Marks: ");
           if(!sc.hasNextDouble()) {
-            System.out.println("Marks Must be a Decimal Integer");
+            System.out.println("Marks Must be a Numeric");
             sc.nextLine();
             continue;
           }
@@ -70,7 +71,7 @@ public class Main {
           if(count % batchSize == 0) {
             int[] rowsAffectedCheck = preparedStatement.executeBatch();
             for (int i = 0; i < rowsAffectedCheck.length; ++i) {
-              if(rowsAffectedCheck[i] == PreparedStatement.EXECUTE_FAILED)
+              if(rowsAffectedCheck[i] == Statement.EXECUTE_FAILED)
                 System.out.println("Query: " + i + " not Executed Successfully.");
             }
             preparedStatement.clearBatch();
@@ -85,9 +86,9 @@ public class Main {
           }
         } while (choice != 'N');
         preparedStatement.executeBatch();   // * Processing LeftOver Batch
-        System.out.println("Batch of All Entered Student Executed.");
+        System.out.println("Batch of " + count + " Entered Student Executed.");
         connection.commit();                // * Finally Commiting
-        System.out.println("Inserted All Entered Students Successfully.");
+        System.out.println("Inserted " + count + " Entered Students Successfully.");
       }
     } catch (SQLException e) {
       if (connection != null) {
