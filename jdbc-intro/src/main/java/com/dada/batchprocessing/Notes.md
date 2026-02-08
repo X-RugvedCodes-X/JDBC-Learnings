@@ -398,10 +398,10 @@ Main memory consumers:
 
 ### Best practices
 
-✔ small batch sizes
-✔ clearBatch()
-✔ avoid large collections
-✔ commit periodically
+-  small batch sizes
+-  clearBatch()
+-  avoid large collections
+-  commit periodically
 
 ---
 
@@ -468,10 +468,10 @@ Database
 
 ### Why?
 
-✔ testability
-✔ replace DB easily
-✔ easier maintenance
-✔ separation of concerns
+-  testability
+-  replace DB easily
+-  easier maintenance
+-  separation of concerns
 
 ---
 
@@ -497,13 +497,13 @@ Data might come from:
 
 ### You would add
 
-✔ connection pool (HikariCP)
-✔ logging
-✔ config via env
-✔ exception strategy
-✔ graceful shutdown
-✔ retries
-✔ metrics
+-  connection pool (HikariCP)
+-  logging
+-  config via env
+-  exception strategy
+-  graceful shutdown
+-  retries
+-  metrics
 
 ---
 
@@ -517,11 +517,11 @@ Data might come from:
 
 You track:
 
-✔ number of processed rows
-✔ failures
-✔ retries
-✔ processing time
-✔ memory / CPU
+-  number of processed rows
+-  failures
+-  retries
+-  processing time
+-  memory / CPU
 
 ---
 
