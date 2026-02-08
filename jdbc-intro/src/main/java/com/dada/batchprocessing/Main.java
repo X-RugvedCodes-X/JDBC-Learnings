@@ -48,6 +48,11 @@ public class Main {
             continue;
           }
           System.out.print("Enter Student's Marks: ");
+          if(!sc.hasNextDouble()) {
+            System.out.println("Marks Must be a Decimal Integer");
+            sc.nextLine();
+            continue;
+          }
           double marks = sc.nextDouble();
           if(marks <= 0.0) {
             System.out.println("Don't Enter Negative Marks");
@@ -85,8 +90,10 @@ public class Main {
         System.out.println("Inserted All Entered Students Successfully.");
       }
     } catch (SQLException e) {
-      if (connection != null) 
+      if (connection != null) {
         connection.rollback();
+        connection.close();
+      }
       e.printStackTrace();
     }
   }
