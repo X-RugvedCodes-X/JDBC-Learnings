@@ -329,9 +329,9 @@ Usually retried:
 
 ### But production systems also:
 
-✔ limit retry attempts
-✔ log permanently failing rows
-✔ move them to a **dead-letter table/file**
+- limit retry attempts
+- log permanently failing rows
+- move them to a **dead-letter table/file**
 
 Otherwise infinite loop 
 
