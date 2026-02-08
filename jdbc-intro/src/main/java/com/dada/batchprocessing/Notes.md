@@ -247,9 +247,308 @@ Prevents memory explosion.
 ---
 
 
-# Mental model to remember
+## Mental model to remember
 
 PreparedStatement = **template**
 Batch = **stack many filled templates → send together**
 
+---
+
+
+# Most Common Asked Questions
+
+Perfect. These are exactly the questions that turn a “knows JDBC” candidate into an **engineer**.
+
+I’ll answer them the way strong interview answers usually sound: practical, trade-off aware, and production minded.
+
+---
+
+# 1) What if a batch partially fails?
+
+In JDBC, `executeBatch()` returns an `int[]`.
+
+Each element corresponds to one statement.
+
+Possible values:
+
+* `>= 0` → success, rows affected
+* `Statement.SUCCESS_NO_INFO` → success but unknown count
+* `Statement.EXECUTE_FAILED` → failed
+
+---
+
+### Interview-quality answer
+
+If auto-commit is **false** (like in your code), I have two options:
+
+### Option A – Fail whole transaction (most common)
+
+Rollback everything → keep data consistent.
+
+Used when:
+✔ atomicity is important
+✔ partial data is dangerous
+
+```
+if any failed → rollback()
+```
+
+---
+
+### Option B – Accept partial success
+
+Commit successful ones, track failures.
+
+Used in:
+✔ bulk ingestion
+✔ logs
+✔ analytics
+
+---
+
+### Bonus senior point 
+
+Some drivers stop execution at first error.
+So you might not even know later results.
+
+---
+
+---
+
+# 2) How would you retry only failed rows?
+
+After `executeBatch()`:
+
+```
+for each index i:
+    if result[i] == EXECUTE_FAILED
+        retry that record
+```
+
+Usually retried:
+
+* individually
+* or in a smaller batch
+
+---
+
+### But production systems also:
+
+✔ limit retry attempts
+✔ log permanently failing rows
+✔ move them to a **dead-letter table/file**
+
+Otherwise infinite loop 
+
+---
+
+### Example strategy
+
+Attempt 1 → batch
+Attempt 2 → retry failed individually
+Still fail → log + skip
+
+---
+
+---
+
+# 3) What if 10 million records?
+
+If a candidate says:
+
+> I’ll store them in a List and then batch
+
+Immediate rejection 
+→ memory explosion.
+
+---
+
+### Correct approach
+
+**Stream / chunk processing**.
+
+Read small portions → batch → commit → release memory.
+
+Example:
+
+```
+read 10k
+insert batch
+commit
+clear
+repeat
+```
+
+---
+
+### Bonus senior point 
+
+You may also:
+
+* disable indexes temporarily
+* tune commit frequency
+* use database bulk loaders (COPY, LOAD DATA)
+
+---
+
+---
+
+# 4) Memory considerations?
+
+Main memory consumers:
+
+* objects in batch
+* driver buffers
+* result arrays
+
+---
+
+### Best practices
+
+✔ small batch sizes
+✔ clearBatch()
+✔ avoid large collections
+✔ commit periodically
+
+---
+
+If memory spikes → GC pressure → slow system.
+
+---
+
+
+# 5) When does batching become slower?
+
+Fun question. Interviewers love it.
+
+People assume bigger batch = faster.
+
+Not always.
+
+---
+
+### Too large → problems
+
+* network packet too big
+* DB lock contention
+* transaction log heavy
+* memory overhead
+* long rollback time if failure
+
+---
+
+### Real answer
+
+We **benchmark** and find sweet spot.
+
+Often:
+
+```
+100 – 1000
+```
+
+depends on:
+driver, DB, network.
+
+---
+
+---
+
+# 6) How would you design this in layers?
+
+Huge signal of maturity.
+
+---
+
+### Instead of everything in `main()`:
+
+```
+Controller / UI
+↓
+Service (business logic)
+↓
+Repository / DAO (JDBC)
+↓
+Database
+```
+
+---
+
+### Why?
+
+✔ testability
+✔ replace DB easily
+✔ easier maintenance
+✔ separation of concerns
+
+---
+
+### Interview gold line 
+
+> UI should not know how persistence works.
+
+---
+
+---
+
+# 7) How would this run in production?
+
+Not from console input 
+
+Data might come from:
+
+* files
+* APIs
+* queues
+* scheduled jobs
+
+---
+
+### You would add
+
+✔ connection pool (HikariCP)
+✔ logging
+✔ config via env
+✔ exception strategy
+✔ graceful shutdown
+✔ retries
+✔ metrics
+
+---
+
+### Another strong sentence 
+
+> Production systems must be observable and recoverable.
+
+---
+
+# 8) How would you monitor it?
+
+You track:
+
+✔ number of processed rows
+✔ failures
+✔ retries
+✔ processing time
+✔ memory / CPU
+
+---
+
+Tools:
+
+* logs
+* metrics (Prometheus)
+* dashboards
+* alerts
+
+---
+
+Example:
+
+```
+Processed: 1,000,000
+Failed: 12
+Retry: 10 success
+2 moved to DLQ
+```
 ---
