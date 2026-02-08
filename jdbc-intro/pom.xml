@@ -127,7 +127,8 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.6.3</version>
         <configuration>
-          <mainClass>com.dada.jdbcintro.Main</mainClass>
+          <!-- <mainClass>com.dada.jdbcintro.Main</mainClass> -->
+          <mainClass>com.dada.batchprocessing.Main</mainClass>
           <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>
       </plugin>

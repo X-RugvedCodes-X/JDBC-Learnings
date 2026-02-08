@@ -130,7 +130,7 @@ public class DB_Util {
     String queryForDeletionOfData = "DELETE FROM students WHERE id = ?";
     try (Connection connection = DriverManager.getConnection(url, username, password);
         PreparedStatement preparedStatement = connection.prepareStatement(queryForDeletionOfData)) {
-      preparedStatement.setInt(1, 3);
+      preparedStatement.setInt(1, 2);
       int rowsAffected = preparedStatement.executeUpdate();
       System.out.println(rowsAffected > 0 ? "Data Deleted Successfully !" : "Problem in Data Deletion !");
     } catch (SQLException e) {
